@@ -1,0 +1,1 @@
+export const isSkippedName = (name: string) => name.startsWith("x_");
