@@ -14,7 +14,7 @@ export const logSummary = (state: RunningState) => {
     failures.forEach(failure => {
       let parent = failure.parents.join('/');
       if (parent !== lastParent) {
-        lastParent === parent;
+        lastParent = parent;
         console.groupEnd();
         console.group(parent);
       }
