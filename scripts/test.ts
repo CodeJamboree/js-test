@@ -1,4 +1,4 @@
-import { run } from "../src/run.js";
+import { run } from "../src/index.js";
 
 try {
   console.info('Test')

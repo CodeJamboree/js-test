@@ -9,9 +9,8 @@
     ],
     "module": "ESNext",
     "moduleResolution": "Node10",
-    "rootDir": "src",
-    "outDir": "dist",
-    "outFile": "index.js",
+    "rootDir": "./src",
+    "outDir": "./build",
     "declaration": true,
     "sourceMap": true,
     "declarationMap": true,
@@ -21,5 +20,11 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true
-  }
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.test.ts"
+  ],
 }

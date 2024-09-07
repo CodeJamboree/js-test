@@ -1,6 +1,7 @@
 import { endOfLine } from "./endOfLine.js";
 import { parseCapture } from "./parseCapture.js";
 import { passThrough } from "./passThrough.js";
+import { discardOldCaptures } from "./discardOldCaptures.js";
 
 export const onWrite = (state: MockStdoutState, ...args: writeArgs) => {
   const parsed = parseCapture(args);

@@ -1,3 +1,4 @@
+import { discardOldCaptures } from "./discardOldCaptures.js";
 
 export const setCaptureLimit = (state: MockStdoutState, limit: number) => {
   if (isNaN(limit)) return;
