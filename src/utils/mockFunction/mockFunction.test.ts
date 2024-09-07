@@ -1,4 +1,4 @@
-import { mockFunction } from "./index.js";
+import { mockFunction } from "./mockFunction.js";
 import { expect } from "../../expect/index.js";
 
 export const wasCalled = () => {

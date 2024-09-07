@@ -1,6 +1,6 @@
 import { logExpectationData } from "./logExpectationData.js";
 import { expect } from "../expect/index.js";
-import { standardUtils } from "../mock/index.js";
+import { standardUtils } from "../utils/index.js";
 
 export const beforeEach = () => {
   standardUtils.spyAndHide();

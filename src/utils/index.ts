@@ -1,4 +1,4 @@
-import { mockFunction } from "./function/index.js";
+import { mockFunction } from "./mockFunction/mockFunction.js";
 import { standardUtils } from "./standardUtils/standardUtils.js";
 import { dateUtils } from './dateUtils/dateUtils.js';
 
