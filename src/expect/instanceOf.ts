@@ -1,4 +1,4 @@
-import { Expect } from "../global.js";
+import { Expect } from "./global.js";
 import { ExpectationError } from "./ExpectationError.js";
 
 export const instanceOf = function <T extends NonNullable<object>>(this: Expect<T>, expected: any | Function | string) {

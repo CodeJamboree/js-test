@@ -1,6 +1,5 @@
-import { Expect } from "../global.js";
+import { Expect } from "./global.js";
 import { ExpectationError } from "./ExpectationError.js";
-import { expect } from './index.js';
 
 export const toThrow = function <T extends Function>(this: Expect<T>, error?: Error | string) {
   try {
@@ -14,7 +13,7 @@ export const toThrow = function <T extends Function>(this: Expect<T>, error?: Er
         throw new ExpectationError(`throws`, this, { expected: error });
       }
     }
-    expect(e, this.details).equals(error);
+    this.and(e).equals(error);
     return;
   }
   throw new ExpectationError(`throws`, this, { expected: error });

@@ -1,4 +1,4 @@
-import { Expect } from "../global.js";
+import { Expect } from "./global.js";
 import { ExpectationError } from "./ExpectationError.js";
 
 export const startsWith = function <T>(this: Expect<T>, expected: string) {

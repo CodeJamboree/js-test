@@ -1,4 +1,4 @@
-import { Expect } from "../global";
+import { Expect } from "./global.js";
 
 export class ExpectationError extends Error {
   data: object | undefined = undefined;

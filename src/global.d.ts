@@ -4,7 +4,7 @@ type SetupName = 'beforeAll' | 'beforeEach' | 'afterEach' | 'afterAll';
 
 type SuiteSetup = Partial<Record<SetupName, Function>>;
 
-interface TestRunOptions extends SuiteSetup {
+export interface TestRunOptions extends SuiteSetup {
   folderPath: fs.PathLike,
   testFilePattern: RegExp,
   testFileReplacement: string,
@@ -46,17 +46,3 @@ interface TestSuites extends SuiteInfo {
 }
 
 type SuiteOrSuites = TestSuite | TestSuites;
-
-interface Expect<T> {
-  actual: T,
-  details?: any,
-  equals: <T>(expected: T) => void
-  is: <T>(expected: T) => void,
-  isFunction: <T extends Function>(expected?: boolean) => void,
-  includes: <T extends string | any[]>(expected: string | any) => void,
-  instanceOf: <T extends Function | object>(expected: string | Function | object) => void,
-  startsWith: <T extends string>(epected: string) => void,
-  endsWith: <T extends string>(expected: string) => void,
-  toThrow: <T extends Function>(error?: string | Error) => void,
-  lengthOf: <T extends NonNullable<object> | string | Function>(expeced: number) => void
-}

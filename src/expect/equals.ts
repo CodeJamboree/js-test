@@ -1,4 +1,4 @@
-import { Expect } from "../global.js";
+import { Expect } from "./global.js";
 import { ExpectationError } from "./ExpectationError.js";
 import { serialize } from "./serialize.js";
 
