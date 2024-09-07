@@ -11,6 +11,10 @@ const writeValue = ([key, value]: [string, any]): void => {
     case 'actualValue':
       console.info('Actual:', value);
       break;
+    case 'unexpected':
+    case 'unexpectedValue':
+      console.info('Not Expected:', value);
+      break;
     case 'details':
       if (value !== undefined) {
         console.debug('Details:', value);

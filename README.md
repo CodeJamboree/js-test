@@ -146,8 +146,10 @@ export const test = () => {
 
   expect(target).is("123");
   expect(target).equals(123);
+  expect(target).above("100");
+  expect(target).below("150");
+  expect(target).within("100", "150");
   expect(target).isFunction(); // error
-  expect(target).isFunction(false);
   expect(target).lengthOf(3);
   expect(target).startsWith("1");
   expect(target).endsWith("3");
@@ -176,6 +178,23 @@ export const test = () => {
   expect(target, 'checking is').is("123");
   expect(target, 'comparing equal').equals(123);
   expect(target, 'third check').isFunction(false);
+}
+```
+Negate method swaps expectations.
+```js
+export const test = () => {
+  const target = "123";
+
+  expect(target).not().is(123);
+  expect(target).not().equals("432");
+  expect(target).not().above("150");
+  expect(target).not().below("100");
+  expect(target).not().within("200", "250");
+  expect(target).not().isFunction();
+  expect(target).not().lengthOf(42);
+  expect(target).not().startsWith("3");
+  expect(target).not().endsWith("1");
+  expect(target).not().includes("9");
 }
 ```
 
@@ -214,6 +233,44 @@ export const testLogic = () => {
 }
 ```
 
+# Date Utility
+
+Freeze time in place, or set it to a specific time.
+```js
+import { expect, dateUtils } from '@codejamboree/js-test';
+
+export const afterEach = () => {
+  dateUtils.restore();
+}
+
+export const timeFrozen = async () => {
+  dateUtils.freeze();
+  return new Promise((resolve) => {
+    const date = new Date();
+    setTimeout(() => {
+      expect(date.getTime()).is(new Date().getTime());
+      resolve();
+    }, 100);
+  });
+}
+
+export const customTime = async () => {
+  dateUtils.set(Date.UTC(1975, 4, 28, 3, 15, 1, 184));
+  expect(new Date().toISOString()).is('1975-05-28T03:15:01.184Z');
+}
+
+export const timeRestored = () => {
+  dateUtils.set(Date.UTC(1975, 4, 28, 3, 15, 1, 184));
+
+  expect(new Date()).instanceOf('FakeDate');
+  expect(new Date().toISOString()).is('1975-05-28T03:15:01.184Z');
+
+  dateUtils.restore();
+  
+  expect(new Date()).not().instanceOf('FakeDate');
+  expect(new Date().toISOString()).not().is('1975-05-28T03:15:01.184Z');
+}
+```
 # Mock Stdout
 
 Capture the underlying stream of the console log and hide the output.

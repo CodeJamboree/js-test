@@ -2,34 +2,43 @@ import { Expect } from "./global.js";
 import { ExpectationError } from "./ExpectationError.js";
 
 export const lengthOf = function <T>(this: Expect<T>, expected: number) {
+  const length = parseLength(this.actual);
+  if (this.negate) {
+    if (length === expected)
+      throw new ExpectationError(`length`, this, { expected, actual: length });
+  } else if (length !== expected) {
+    throw new ExpectationError(`not length`, this, { expected, actual: length });
+  }
+}
+
+const parseLength = <T>(target: T) => {
   let length: any = undefined;
-  switch (typeof this.actual) {
+  switch (typeof target) {
     case 'object':
-      if (this.actual === null) {
+      if (target === null) {
         length = 'invalid (null)';
-      } else if ('length' in this.actual) {
-        length = this.actual;
+      } else if ('length' in target) {
+        length = target;
       } else {
         length = 'invalid key';
       }
       break;
     case 'function':
-      if ('length' in this.actual) {
-        length = this.actual;
+      if ('length' in target) {
+        length = target;
       } else {
         length = 'invalid key';
       }
       break;
     case 'string':
-      length = this.actual.length;
+      length = target.length;
       break;
     case 'undefined':
     case 'number':
     case 'boolean':
     default:
-      length = `invalid (${typeof this.actual})`;
+      length = `invalid (${typeof target})`;
       break;
   }
-  if (length === expected) return;
-  throw new ExpectationError(`length`, this, { expected, actual: length });
+  return length;
 }
