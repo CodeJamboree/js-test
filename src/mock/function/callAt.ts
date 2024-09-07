@@ -8,5 +8,5 @@ export const callAt = <T extends Call>({ calls }: MockFunctionState, index: numb
   } else if (i >= count) {
     throw new MockedFunctionError(`Call index ${index} out of range. Only have ${count}.`);
   }
-  return calls[index] as T;
+  return calls[i] as T;
 }
