@@ -1,0 +1,1 @@
+export const originalNow = performance.now.bind(performance);

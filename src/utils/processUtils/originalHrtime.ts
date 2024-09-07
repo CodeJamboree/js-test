@@ -1,0 +1,1 @@
+export const originalHrtime = process.hrtime.bind(process);

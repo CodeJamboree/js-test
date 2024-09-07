@@ -1,5 +1,12 @@
 import { run } from "./run.js";
-import { mockFunction, standardUtils, dateUtils } from "./utils/index.js";
+import {
+  mockFunction,
+  standardUtils,
+  dateUtils,
+  chronoUtils,
+  performanceUtils,
+  processUtils
+} from "./utils/index.js";
 import { expect } from "./expect/index.js";
 
 export {
@@ -7,5 +14,8 @@ export {
   mockFunction,
   standardUtils,
   dateUtils,
+  chronoUtils,
+  performanceUtils,
+  processUtils,
   expect
 }

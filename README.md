@@ -8,9 +8,10 @@ A simple test platform.
   * Setup/Teardown individual and entire tests
 * Expectation helper
 * Mock functions
-* Spy & Fake standard output writes
-* Spy & Fake standard error writes
+* Spy & Fake standard output/error writes
 * Fake date creation
+* Fake performance now
+* Fake process hrtime
 
 # Running tests
 
@@ -235,44 +236,6 @@ export const testLogic = () => {
 }
 ```
 
-# Date Utility
-
-Freeze time in place, or set it to a specific time.
-```js
-import { expect, dateUtils } from '@codejamboree/js-test';
-
-export const afterEach = () => {
-  dateUtils.restore();
-}
-
-export const timeFrozen = async () => {
-  dateUtils.freeze();
-  return new Promise((resolve) => {
-    const date = new Date();
-    setTimeout(() => {
-      expect(date.getTime()).is(new Date().getTime());
-      resolve();
-    }, 100);
-  });
-}
-
-export const customTime = async () => {
-  dateUtils.set(Date.UTC(1975, 4, 28, 3, 15, 1, 184));
-  expect(new Date().toISOString()).is('1975-05-28T03:15:01.184Z');
-}
-
-export const timeRestored = () => {
-  dateUtils.set(Date.UTC(1975, 4, 28, 3, 15, 1, 184));
-
-  expect(new Date()).instanceOf('FakeDate');
-  expect(new Date().toISOString()).is('1975-05-28T03:15:01.184Z');
-
-  dateUtils.restore();
-  
-  expect(new Date()).not().instanceOf('FakeDate');
-  expect(new Date().toISOString()).not().is('1975-05-28T03:15:01.184Z');
-}
-```
 # Standard Utility
 
 Inspect write arguments to the standard output & standard error, and prevent them from being written.
@@ -321,5 +284,115 @@ export const test = () => {
   standardUtils.clearCaptured();
   expect(standardUtils.writes(), 'writes').equals([]);
 
+}
+```
+
+# Date Utility
+
+Freeze time in place, or set it to a specific time.
+```js
+import { expect, dateUtils } from '@codejamboree/js-test';
+
+export const afterEach = () => {
+  dateUtils.restore();
+}
+
+export const timeFrozen = async () => {
+  dateUtils.freeze();
+  return new Promise((resolve) => {
+    const date = new Date();
+    setTimeout(() => {
+      expect(date.getTime()).is(new Date().getTime());
+      resolve();
+    }, 100);
+  });
+}
+
+export const customTime = async () => {
+  dateUtils.set(Date.UTC(1975, 4, 28, 3, 15, 1, 184));
+  expect(new Date().toISOString()).is('1975-05-28T03:15:01.184Z');
+}
+
+export const timeRestored = () => {
+  dateUtils.set(Date.UTC(1975, 4, 28, 3, 15, 1, 184));
+
+  expect(new Date()).instanceOf('FakeDate');
+  expect(new Date().toISOString()).is('1975-05-28T03:15:01.184Z');
+
+  dateUtils.restore();
+  
+  expect(new Date()).not().instanceOf('FakeDate');
+  expect(new Date().toISOString()).not().is('1975-05-28T03:15:01.184Z');
+}
+```
+# Performance Utility
+
+Fake performance now.
+```js
+
+export const test = () => {
+  performanceUtils.freeze();
+  const now1 = performance.now();
+  const now2 = performance.now();
+  expect(now1).is(now2);
+
+  performanceUtils.set(123);
+  expect(performance.now()).is(123);
+
+  performanceUtils.restore();
+  const now3 = performance.now();
+  const now4 = performance.now();
+  expect(now3).not().equals(now4);
+}
+
+```
+
+# Process Utility
+
+Fake process high-resolution time
+```js
+export const testFrozen = () => {
+  standardUtils.spyAndHide();
+  processUtils.freeze();
+  console.time(label);
+  console.timeEnd(label);
+  expect(standardUtils.writeAt(-1)).equals(`${label}: 0ms\n`);
+  processUtils.restore();
+  standardUtils.restore();
+}
+export const testCustom = () => {
+  standardUtils.spyAndHide();
+  processUtils.set([1.000, 0]);
+  console.time(label);
+  processUtils.set([1.001, 0]);
+  console.timeEnd(label);
+  expect(standardUtils.writeAt(-1)).equals(`${label}: 1ms\n`);
+  processUtils.restore();
+  standardUtils.restore();
+}
+```
+
+# Chrono Utility
+
+Freeze time-based methods and objects
+
+```js
+export const test = () => {
+
+  chronoUtils.freeze();
+
+  const time1 = process.hrtime();
+  const time2 = process.hrtime();
+  expect(time1).equals(time2);
+
+  const now1 = performance.now();
+  const now2 = performance.now();
+  expect(now1).equals(now2);
+
+  const date1 = new Date();
+  const date2 = new Date();
+  expect(date1).equals(date2);
+
+  chornoUtils.restore();
 }
 ```
