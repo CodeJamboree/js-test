@@ -19,11 +19,12 @@ interface TestInfo {
   siblings: number,
   error?: unknown
 }
+
 interface RunningState {
   passed: number,
   failed: number,
   skipped: number,
-  failures: Failure[],
+  failures: TestInfo[],
   hasFocused: boolean,
   excessTests: number,
   parents: string[],
