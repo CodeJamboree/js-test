@@ -1,5 +1,5 @@
 {
-  "name": "js-test",
+  "name": "@codejamboree/js-test",
   "version": "1.0.0",
   "description": "testing framework for javascript",
   "type": "module",

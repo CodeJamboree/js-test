@@ -6,7 +6,7 @@ export type ModuleList = {
   [key: string]: ModuleList | Module
 }
 
-export const getModules = async (dir: fs.PathLike, pattern: RegExp, replacement: string): Promise<ModuleList | undefined> => {
+export const getModules = async (dir: fs.PathLike, pattern: RegExp, replacement: string | ((substring: string, ...args: any[]) => string) | undefined): Promise<ModuleList | undefined> => {
   if (!fs.existsSync(dir)) return;
   const files = fs.readdirSync(dir);
   if (files.length === 0) return;
@@ -23,7 +23,18 @@ export const getModules = async (dir: fs.PathLike, pattern: RegExp, replacement:
       }
     } else {
       if (pattern.test(file)) {
-        const name = file.replace(pattern, replacement);
+        let name;
+        switch (typeof replacement) {
+          case 'string':
+            name = file.replace(pattern, replacement);
+            break;
+          case 'function':
+            name = file.replace(pattern, replacement);
+            break;
+          default:
+            name = file;
+            break;
+        }
         const fullPath = path.resolve(process.cwd(), filePath);
         modules[name] = await import(fullPath);
       }

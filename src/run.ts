@@ -6,7 +6,7 @@ import { logSummary } from './log/logSummary.js';
 
 export const run = async ({
   testFilePattern = /\.test\.js$/,
-  testFileReplacement = '',
+  testFileReplacement,
   folderPath = 'build/src',
   excessTests = Infinity,
   beforeAll,
@@ -23,9 +23,6 @@ export const run = async ({
     return;
   }
   const state: RunningState = {
-    folderPath,
-    testFilePattern,
-    testFileReplacement,
     parents: [],
     passed: 0,
     failed: 0,

@@ -7,7 +7,7 @@ type SuiteSetup = Partial<Record<SetupName, Function>>;
 export interface TestRunOptions extends SuiteSetup {
   folderPath: fs.PathLike,
   testFilePattern: RegExp,
-  testFileReplacement: string,
+  testFileReplacement: string | ((substring: string, ...args: any[]) => string),
   excessTests: number,
   beforeSuite?: Function,
   afterSuite?: Function,
@@ -19,7 +19,7 @@ interface TestInfo {
   siblings: number,
   error?: unknown
 }
-interface RunningState extends TestRunOptions {
+interface RunningState {
   passed: number,
   failed: number,
   skipped: number,
@@ -27,8 +27,12 @@ interface RunningState extends TestRunOptions {
   hasFocused: boolean,
   excessTests: number,
   parents: string[],
+  beforeAll?: Function,
+  beforeSuite?: Function,
   beforeEach?: Function,
-  afterEach?: Function
+  afterEach?: Function,
+  afterSuite?: Function,
+  afterAll?: Function
 }
 type SuiteInfo = {
   focused?: boolean
