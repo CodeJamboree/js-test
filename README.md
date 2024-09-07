@@ -8,7 +8,9 @@ A simple test platform.
   * Setup/Teardown individual and entire tests
 * Expectation helper
 * Mock functions
-* Mock stdout
+* Spy & Fake standard output writes
+* Spy & Fake standard error writes
+* Fake date creation
 
 # Running tests
 
@@ -271,33 +273,53 @@ export const timeRestored = () => {
   expect(new Date().toISOString()).not().is('1975-05-28T03:15:01.184Z');
 }
 ```
-# Mock Stdout
+# Standard Utility
 
-Capture the underlying stream of the console log and hide the output.
+Inspect write arguments to the standard output & standard error, and prevent them from being written.
 
 ```js
-import { expect, mockStdout } from '@codejamboree/js-test';
+import { expect, standardUtils } from '@codejamboree/js-test';
 
-export const beforeEach = () => {
-  console.log('About to hide...');
-  mockStdout.clearCaptured();
-  mockStdout.hideLogs();
-  mockStdout.startCapture();
-}
 export const afterEach = () => {
-  mockStdout.showLogs();
-  mockStdout.stopCapture();
-  console.log('You can see this now');
+  standardUtils.restore();
 }
 
 export const test = () => {
-  console.log("Helow Yello");
-  expect(mockStdout.at(0)).is('Helow Yello\n');
-}
-export const testLast = () => {
-  console.log("Helow Yello 1");
-  console.log("Helow Yello 2");
-  console.log("Helow Yello 3");
-  expect(mockStdout.at(-1)).is('Helow Yello 3\n');
+  console.log("You can see me");
+
+  standardUtils.skipWrite();
+  console.log("You can't see me");
+
+  standardUtils.spy();
+  console.log("Hidden 1");
+  console.warn("Hidden 2");
+
+  expect(standardUtils.writes(), 'spied').equals([
+    'Hidden 1\n',
+    "\u001b[33mHidden 2\u001b[39m\n"
+  ]);
+  expect(standardUtils.writeAt(0), 'start 1')
+    .is('Hidden 1\n');
+  expect(standardUtils.writeAt(1), 'start 2')
+    .is("\u001b[33mHidden 2\u001b[39m\n");
+
+  expect(standardUtils.typeAt(0)).is('standard');
+  expect(standardUtils.typeAt(1)).is('error');
+
+  standardUtils.unspy();
+  console.log('Still hidden');
+  expect(standardUtils.writeAt(-1), 'last')
+    .is("\u001b[33mHidden 2\u001b[39m\n");
+
+  standardUtils.allowWrite();
+  console.log("You can see me again!");
+  expect(standardUtils.writes(), 'all writes').equals([
+    'Hidden 1\n',
+    "\u001b[33mHidden 2\u001b[39m\n"
+  ]);
+
+  standardUtils.clearCaptured();
+  expect(standardUtils.writes(), 'writes').equals([]);
+
 }
 ```
