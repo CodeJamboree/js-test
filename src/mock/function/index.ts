@@ -13,7 +13,7 @@ export const mockFunction = (callback?: Function): MockFunction => {
   }
 
   const mock = function (this: MockFunction, ...args: any[]): any {
-    state.calls.push(args);
+    state.calls.push(args.slice());
     let result;
     if (typeof callback === 'function') {
       result = callback(...args);
