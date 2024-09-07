@@ -11,14 +11,14 @@ export const logSummary = (state: RunningState) => {
   if (failures.length > 0) {
     console.group('Failures');
     let lastParent = '';
-    failures.forEach(failure => {
-      let parent = failure.parents.join('/');
-      if (parent !== lastParent) {
-        lastParent = parent;
+    failures.forEach(({ parents, name }) => {
+      let path = parents.join('/');
+      if (lastParent !== path) {
+        lastParent = path;
         console.groupEnd();
-        console.group(parent);
+        console.group(lastParent);
       }
-      console.error(failure.name);
+      console.error(name);
     });
     console.groupEnd();
   }
