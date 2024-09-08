@@ -10,6 +10,11 @@ export const runTest = async (test: Function, setup: SuiteSetup, info: TestInfo,
     if ('timeoutMs' in test) {
       timeoutMs = test.timeoutMs as number;
     }
+    if (timeoutMs > 0x7FFFFFFF) {
+      timeoutMs = 0x7FFFFFFF;
+    } else if (timeoutMs < 0) {
+      timeoutMs = 0;
+    }
     await new Promise<void>(async (resolve, reject) => {
       let timeout = setTimeout(() => {
 
