@@ -5,6 +5,7 @@ import { processUtils } from "./processUtils/processUtils.js";
 import { performanceUtils } from "./performanceUtils/performanceUtils.js";
 import { chronoUtils } from "./chronoUtils/chronoUtils.js";
 import { mathRandomUtils } from "./mathRandomUtils/mathRandomUtils.js";
+import { httpUtils } from "./httpUtils/httpUtils.js";
 export {
   mockFunction,
   standardUtils,
@@ -12,5 +13,6 @@ export {
   processUtils,
   performanceUtils,
   chronoUtils,
-  mathRandomUtils
+  mathRandomUtils,
+  httpUtils
 }
