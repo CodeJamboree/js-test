@@ -1,5 +1,5 @@
 import { mockFunction } from "./mockFunction.js";
-import { expect } from "../../expect/index.js";
+import { expect } from "../../expect/expect.js";
 
 export const wasCalled = () => {
   const foo = mockFunction();

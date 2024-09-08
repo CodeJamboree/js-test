@@ -1,5 +1,5 @@
 import { isRunnableTest } from "./isRunnableTest.js";
-import { expect } from "../expect/index.js";
+import { expect } from "../expect/expect.js";
 
 const noop = () => { };
 

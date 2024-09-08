@@ -9,7 +9,7 @@ import {
   mathRandomUtils,
   httpUtils
 } from "./utils/index.js";
-import { expect } from "./expect/index.js";
+import { expect } from "./expect/expect.js";
 
 export {
   run,

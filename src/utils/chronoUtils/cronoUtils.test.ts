@@ -1,5 +1,5 @@
 import { chronoUtils } from "../index.js";
-import { expect } from "../../expect/index.js";
+import { expect } from "../../expect/expect.js";
 
 export const afterEach = () => {
   chronoUtils.restore();

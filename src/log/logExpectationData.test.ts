@@ -1,5 +1,5 @@
 import { logExpectationData } from "./logExpectationData.js";
-import { expect } from "../expect/index.js";
+import { expect } from "../expect/expect.js";
 import { standardUtils } from "../utils/index.js";
 
 export const beforeEach = () => {

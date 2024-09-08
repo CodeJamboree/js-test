@@ -1,5 +1,5 @@
 import { isSkippedName } from "./isSkippedName.js";
-import { expect } from "../expect/index.js";
+import { expect } from "../expect/expect.js";
 
 
 export const skipped = () => {

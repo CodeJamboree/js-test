@@ -1,4 +1,4 @@
-import { expect } from "../../expect/index.js";
+import { expect } from "../../expect/expect.js";
 import { prng } from "./prng.js";
 import { restore } from "./restore.js";
 

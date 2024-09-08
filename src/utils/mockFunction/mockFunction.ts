@@ -28,5 +28,17 @@ export const mockFunction = <T extends (...args: any[]) => any>(callback?: T): M
   mock.callAt = callAt.bind(mock, state);
   mock.callArg = callArg.bind(mock, state);
 
+  const stringify = () => {
+    if (!callback) {
+      return `[MockedFunction]`;
+    }
+    let name = callback.name;
+    if ((name ?? '') === '') name = '(anonymous)';
+    return `[MockedFunction: ${name}]`;
+  };
+
+  mock.toString = stringify;
+  mock.toJSON = stringify;
+
   return mock;
 }

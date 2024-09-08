@@ -1,6 +1,6 @@
 import { processUtils } from "./processUtils.js";
 import { standardUtils } from "../standardUtils/standardUtils.js";
-import { expect } from "../../expect/index.js";
+import { expect } from "../../expect/expect.js";
 
 const label = 'Start';
 

@@ -1,4 +1,4 @@
-import { expect } from '../../expect/index.js';
+import { expect } from '../../expect/expect.js';
 import { set } from './set.js';
 import { restore } from './restore.js';
 import { FakeDate } from './FakeDate.js';
