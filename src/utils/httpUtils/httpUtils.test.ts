@@ -1,4 +1,4 @@
-import { expect } from "../../index.js";
+import { expect, mockFunction } from "../../index.js";
 import { httpUtils } from "./httpUtils.js";
 import https from 'https';
 import http from 'http';
@@ -6,6 +6,19 @@ import http from 'http';
 export const afterEach = () => {
   httpUtils.restore();
 }
+
+export const fakedObjects = () => new Promise<void>((resolve, reject) => {
+  httpUtils.mock();
+  const url = new URL('https://localhost');
+  const options: https.RequestOptions = { servername: 'options' };
+  const callback = mockFunction((res: http.IncomingMessage) => {
+    expect(res).instanceOf('FakeIncomingMessage');
+    resolve();
+  });
+  const req = https.request(url, options, callback);
+  expect(req).instanceOf('FakeClientRequest');
+  req.end();
+});
 
 export const status = async () => new Promise<void>((resolve, reject) => {
   httpUtils.setStatus(123, "The Status");
@@ -92,3 +105,4 @@ export const postDataWithEncodedResponse = async () => new Promise<void>((resolv
   request.write(postData);
   request.end();
 });
+

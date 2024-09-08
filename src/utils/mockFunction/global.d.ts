@@ -7,7 +7,8 @@ interface MockFunctionState {
   returns: any
 }
 
-interface MockFunction extends Function {
+interface MockFunction<T extends (...args: any[]) => any = (...args: any[]) => any> {
+  (...args: Parameters<T>): ReturnType<T>;
   called: () => boolean,
   callCount: () => number,
   callArg: (index?: number, argIndex?: number) => any,

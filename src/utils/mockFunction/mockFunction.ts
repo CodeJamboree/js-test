@@ -4,7 +4,7 @@ import { callCount } from "./callCount.js";
 import { called } from "./called.js";
 import { returns } from "./returns.js";
 
-export const mockFunction = (callback?: Function): MockFunction => {
+export const mockFunction = <T extends (...args: any[]) => any>(callback?: T): MockFunction<T> => {
 
   const state: MockFunctionState = {
     calls: [] as Call[],
@@ -12,7 +12,7 @@ export const mockFunction = (callback?: Function): MockFunction => {
     returns: undefined
   }
 
-  const mock = function (this: MockFunction, ...args: any[]): any {
+  const mock = function (this: MockFunction<T>, ...args: any[]): any {
     state.calls.push(args.slice());
     let result;
     if (typeof callback === 'function') {
