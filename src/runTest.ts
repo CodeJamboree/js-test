@@ -6,10 +6,19 @@ export const runTest = async (test: Function, setup: SuiteSetup, info: TestInfo,
   try {
     await state.beforeEach?.();
     await setup.beforeEach?.();
+    let { timeoutMs } = state;
+    if ('timeoutMs' in test) {
+      timeoutMs = test.timeoutMs as number;
+    }
     await new Promise<void>(async (resolve, reject) => {
       let timeout = setTimeout(() => {
-        reject('Timed Out');
-      }, state.timeoutMs);
+
+        const time = timeoutMs >= 1000 ?
+          `${(timeoutMs / 1000).toLocaleString()}s` :
+          `${timeoutMs.toLocaleString()}ms`;
+
+        reject(`Test timed out after ${time}`);
+      }, timeoutMs);
       await test();
       clearTimeout(timeout);
       resolve();

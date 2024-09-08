@@ -5,12 +5,15 @@ import { setStatus } from './setStatus.js';
 import { restore } from './restore.js';
 import { FakeIncomingMessage } from './FakeIncomingMessage.js';
 import { FakeClientRequest } from './FakeClientRequest.js';
+import { mock } from './mock.js';
+import { setResponseData } from './setResponseData.js';
 
 const state: HttpState = {
   clientRequest: FakeClientRequest,
   incomingMessage: FakeIncomingMessage,
   mocked: false,
-  requestTimeoutMs: 1000
+  requestTimeoutMs: 100,
+  responseTimeoutMs: 100
 }
 
 export const httpUtils = {
@@ -18,5 +21,7 @@ export const httpUtils = {
   setIncomingMessage: setIncomingMessage.bind(null, state),
   restore: restore.bind(null, state),
   setChunks: setChunks.bind(null, state),
-  setStatus: setStatus.bind(null, state)
+  setResponseData: setResponseData.bind(null, state),
+  setStatus: setStatus.bind(null, state),
+  mock: mock.bind(null, state)
 }

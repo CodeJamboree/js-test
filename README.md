@@ -13,6 +13,7 @@ A simple test platform.
 * Fake performance now
 * Fake process hrtime
 * Fake random values
+* Fake http/https request
 
 # Running tests
 
@@ -63,7 +64,7 @@ run({
   folderPath: 'build/src',
   testFilePattern: /$([xf]_)?(.*)\.test\.js$/,
   testFileReplacement: '$2', // replacer for filename pattern
-  timeoutMs: 10000 // Milliseconds before a test takes too long
+  timeoutMs: 10000 // Limit time for tests to run
 })
 ```
 
@@ -82,6 +83,7 @@ export const asyncTest = async () => {
     }, 100);
   });
 }
+asyncTest.timeoutMs = 200; // override timeout
 ```
 
 Special methods are ran before/after each test, or the entire set of tests if present.
@@ -426,7 +428,7 @@ mathRandomUtils.restore();
 
 Mimic requests and responses from the http/https request methods.
 
-NOTE: Not fully mocked. Some methods are missing.
+NOTE: Some methods/logic are missing from FakeClientRequest and FakeIncomingMessage.
 
 ```js
 export const afterEach = () => {
@@ -451,11 +453,18 @@ export const chunks = async () => new Promise<void>((resolve) => {
     'second',
     'third'
   ]);
-  const chunksReceived: string[] = [];
+  /* As binary data
+  httpUtils.setChunks([
+    [ 0x66, 0x69, 0x72, 0x73, 0x74       ],
+    [ 0x73, 0x65, 0x63, 0x6f, 0x6e, 0x64 ],
+    [ 0x74, 0x68, 0x69, 0x72, 0x64       ]
+  ]);
+  */
+  const chunksReceived: any[] = [];
   const request = https.request("https://codejamboree.com");
   request.on('response', res => {
     res.on('data', chunk => {
-      chunksReceived.push(chunk);
+      chunksReceived.push(new TextDecoder().decode(chunk));
     });
     res.on('end', () => {
       expect(chunksReceived).equals([
@@ -466,6 +475,65 @@ export const chunks = async () => new Promise<void>((resolve) => {
       resolve();
     });
   });
+  request.end();
+});
+
+export const callback = async () => new Promise<void>((resolve) => {
+  httpUtils.mock();
+
+  const callback = (res: http.IncomingMessage) => {
+    res.on('end', () => {
+      resolve();
+    });
+  };
+
+  const request = https.request("https://codejamboree.com", callback);
+  request.end();
+});
+
+
+export const postDataWithEncodedResponse = async () => new Promise<void>((resolve) => {
+  httpUtils.mock();
+  const responseData = JSON.stringify({ message: "Received!" });
+  httpUtils.setResponseData(responseData);
+  /* As binary data
+  httpUtils.setResponseData([
+    0x7b, 0x22, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67,
+    0x65, 0x22, 0x3a, 0x20, 0x22, 0x52, 0x65, 0x63, 
+    0x65, 0x69, 0x76, 0x65, 0x64, 0x21, 0x22, 0x7d
+  ]);
+  // 4 byte chunks
+  httpUtils.setResponseData(responseData, 4);
+  */
+
+  const callback = (res: http.IncomingMessage) => {
+    let receivedData: string = '';
+    res.setEncoding('utf8');
+    res.on('data', (chunk: string) => {
+      receivedData += chunk;
+    });
+    res.on('end', () => {
+      const parsed = JSON.parse(receivedData);
+      expect(parsed.message).is('Received!');
+      resolve();
+    });
+  };
+
+  const url = new URL("https://codejamboree.com");
+
+  const postData = JSON.stringify({ name: "Lewis Moten" });
+
+  const options = {
+    hostname: url.hostname,
+    path: url.pathname,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(postData)
+    }
+  }
+  const request = https.request(options, callback);
+  request.write(postData);
   request.end();
 });
 ```

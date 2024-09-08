@@ -1,9 +1,10 @@
 interface HttpState {
   clientRequest: Partial<http.ClientRequest>,
   incomingMessage: Partial<http.IncomingMessage>,
-  chunks?: any[],
+  chunks?: Uint8Array[],
   mocked: boolean,
   statusCode?: number,
   statusMessage?: string,
-  requestTimeoutMs: number
+  requestTimeoutMs: number,
+  responseTimeoutMs: number
 }

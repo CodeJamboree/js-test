@@ -15,7 +15,7 @@ export const run = async ({
   afterEach,
   afterSuite,
   afterAll,
-  timeoutMs = 5000
+  timeoutMs = Infinity
 }: Partial<TestRunOptions>) => {
 
   let modules = await getModules(folderPath, testFilePattern, testFileReplacement);
