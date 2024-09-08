@@ -1,12 +1,20 @@
 import { run } from "../src/index.js";
 
-try {
-  console.info('Test')
-  run({
+const main = async () =>
+  await run({
     folderPath: 'build/src',
     testFilePattern: /([xf]_)?(.*)\.test\.js$/,
-    testFileReplacement: '$2'
-  })
+    testFileReplacement: '$2',
+    timeoutMs: 1000
+  });
+
+
+try {
+  console.info('Test')
+  main()
+    .then(() => {
+      console.log('test run completed.');
+    })
     .catch(e => console.error(e))
     .finally(() => {
       console.info('done');

@@ -32,11 +32,7 @@ run({
 Setup and tear down the entire test run, individual modules, or individual tests.
 
 ```js
-import { run } from '@codejamboree/js-test';
-
-run({
-  folderPath: 'build/src',
-  testFilePattern: /\.test\.js$/,
+{
   beforeAll: () => {
     // I run before any test in the whole test-run begins
   },
@@ -55,31 +51,20 @@ run({
   afterAll: () => {
     // I run after all tests in the entire project completes
   }
-}).then(() => {
-  console.log('done');
-})
+}
 ```
 
-Modify displayed file names
+Other options
 
 ```js
-run({
-  folderPath: 'build/src',
-  testFilePattern: /\.test\.js$/,
-  testFileReplacement: ''
-})
-// File: isSkippedName.test.js
-// Displayed: isSkippedName
+import { run } from '@codejamboree/js-test';
 
 run({
   folderPath: 'build/src',
   testFilePattern: /$([xf]_)?(.*)\.test\.js$/,
-  testFileReplacement: '$2'
+  testFileReplacement: '$2', // replacer for filename pattern
+  timeoutMs: 10000 // Milliseconds before a test takes too long
 })
-// File: x_isSkippedName.test.js
-// File: f_isSkippedName.test.js
-// File: isSkippedName.test.js
-// Displayed: isSkippedName
 ```
 
 A test suite runs all exported functions.
@@ -113,7 +98,7 @@ export const afterEach = () => {
 export const afterAll = () => {
   // Ran after all tests in the file have completed
 }
-``` 
+```
 
 Tests can be ignored by preceeding the name with an x_
 ```js
@@ -435,4 +420,52 @@ expect(Math.random()).is(0.9);
 
 // Cleanup
 mathRandomUtils.restore();
+```
+
+# Http Utility
+
+Mimic requests and responses from the http/https request methods.
+
+NOTE: Not fully mocked. Some methods are missing.
+
+```js
+export const afterEach = () => {
+  httpUtils.restore();
+}
+
+export const status = async () => new Promise<void>((resolve, reject) => {
+  httpUtils.setStatus(123, "The Status");
+  const request = https.request("https://codejamboree.com");
+  request.on('response', res => {
+    expect(res.statusCode).is(123);
+    expect(res.statusMessage).is('The Status');
+    resolve();
+  });
+  request.on('error', reject);
+  request.end();
+});
+
+export const chunks = async () => new Promise<void>((resolve) => {
+  httpUtils.setChunks([
+    'first',
+    'second',
+    'third'
+  ]);
+  const chunksReceived: string[] = [];
+  const request = https.request("https://codejamboree.com");
+  request.on('response', res => {
+    res.on('data', chunk => {
+      chunksReceived.push(chunk);
+    });
+    res.on('end', () => {
+      expect(chunksReceived).equals([
+        'first',
+        'second',
+        'third'
+      ]);
+      resolve();
+    });
+  });
+  request.end();
+});
 ```

@@ -15,6 +15,7 @@ export const run = async ({
   afterEach,
   afterSuite,
   afterAll,
+  timeoutMs = 5000
 }: Partial<TestRunOptions>) => {
 
   let modules = await getModules(folderPath, testFilePattern, testFileReplacement);
@@ -35,7 +36,8 @@ export const run = async ({
     beforeSuite,
     afterSuite,
     afterAll,
-    afterEach
+    afterEach,
+    timeoutMs
   }
   const testSuites = modulesAsTestSuites(state, modules, false);
 

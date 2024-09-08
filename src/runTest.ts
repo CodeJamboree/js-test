@@ -6,7 +6,14 @@ export const runTest = async (test: Function, setup: SuiteSetup, info: TestInfo,
   try {
     await state.beforeEach?.();
     await setup.beforeEach?.();
-    await test();
+    await new Promise<void>(async (resolve, reject) => {
+      let timeout = setTimeout(() => {
+        reject('Timed Out');
+      }, state.timeoutMs);
+      await test();
+      clearTimeout(timeout);
+      resolve();
+    });
     await setup.afterEach?.();
     await state.afterEach?.();
     state.passed++;
