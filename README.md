@@ -12,6 +12,7 @@ A simple test platform.
 * Fake date creation
 * Fake performance now
 * Fake process hrtime
+* Fake random values
 
 # Running tests
 
@@ -395,4 +396,43 @@ export const test = () => {
 
   chornoUtils.restore();
 }
+```
+
+# Math Random Utility
+
+Ensure "random" numbers are deterministic.
+
+```js
+// Psuedo Random Number Generator
+mathRandomUtils.prng(8675309);
+expect(Math.random()).is(0.8961716736183369);
+expect(Math.random()).is(0.957318503389749);
+expect(Math.random()).is(0.6520864715110913);
+
+// Seed again
+mathRandomUtils.prng(8675309);
+expect(Math.random()).is(0.8961716736183369);
+
+// Constant value
+mathRandomUtils.setValue(0.3);
+expect(Math.random()).is(0.3);
+expect(Math.random()).is(0.3);
+
+// List of values
+mathRandomUtils.setValues([0.3, 0.7, 0.4]);
+expect(Math.random()).is(0.3);
+expect(Math.random()).is(0.7);
+expect(Math.random()).is(0.4);
+// Restarts at first value
+expect(Math.random()).is(0.3);
+
+// Custom function
+let value = 0.3;
+mathRandomUtils.setFunction(() => 0.1 + value);
+expect(Math.random()).is(0.4);
+value = 0.8;
+expect(Math.random()).is(0.9);
+
+// Cleanup
+mathRandomUtils.restore();
 ```

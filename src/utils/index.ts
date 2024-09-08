@@ -4,12 +4,13 @@ import { dateUtils } from './dateUtils/dateUtils.js';
 import { processUtils } from "./processUtils/processUtils.js";
 import { performanceUtils } from "./performanceUtils/performanceUtils.js";
 import { chronoUtils } from "./chronoUtils/chronoUtils.js";
-
+import { mathRandomUtils } from "./mathRandomUtils/mathRandomUtils.js";
 export {
   mockFunction,
   standardUtils,
   dateUtils,
   processUtils,
   performanceUtils,
-  chronoUtils
+  chronoUtils,
+  mathRandomUtils
 }

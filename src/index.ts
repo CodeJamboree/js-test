@@ -5,7 +5,8 @@ import {
   dateUtils,
   chronoUtils,
   performanceUtils,
-  processUtils
+  processUtils,
+  mathRandomUtils
 } from "./utils/index.js";
 import { expect } from "./expect/index.js";
 
@@ -17,5 +18,6 @@ export {
   chronoUtils,
   performanceUtils,
   processUtils,
+  mathRandomUtils,
   expect
 }

@@ -25,9 +25,9 @@ const tryThrowing = (expect: Expect<Function>, error: Error | string | undefined
       if (e instanceof Error) {
         if (e.message === error) return;
         if (expect.negate) {
-          throw new ExpectationError(`not throws`, expect, { expected: error });
+          throw new ExpectationError(`not throws`, expect, { actual: e.message, expected: error });
         } else {
-          throw new ExpectationError(`throws`, expect, { expected: error });
+          throw new ExpectationError(`throws`, expect, { actual: e.message, expected: error });
         }
       }
     }
