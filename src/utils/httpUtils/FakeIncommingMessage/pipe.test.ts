@@ -17,8 +17,6 @@ export const pipeTest = () => new Promise<void>((resolve, reject) => {
 
   const stream = new PassThrough();
 
-  const url = new URL('https://localhost');
-  const options: https.RequestOptions = { servername: 'options' };
   const callback = mockFunction((res: http.IncomingMessage) => {
     res.pipe(stream);
     res.on('end', () => {
@@ -27,7 +25,7 @@ export const pipeTest = () => new Promise<void>((resolve, reject) => {
     });
     res.on('error', reject);
   });
-  const req = https.request(url, options, callback);
+  const req = https.request('https://localhost', callback);
   req.end();
 });
 

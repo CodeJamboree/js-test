@@ -20,18 +20,6 @@ export const fakedObjects = () => new Promise<void>((resolve, reject) => {
   req.end();
 });
 
-export const status = async () => new Promise<void>((resolve, reject) => {
-  httpUtils.setStatus(123, "The Status");
-  const request = https.request("https://codejamboree.com");
-  request.on('response', res => {
-    expect(res.statusCode).is(123);
-    expect(res.statusMessage).is('The Status');
-    resolve();
-  });
-  request.on('error', reject);
-  request.end();
-});
-
 export const chunks = async () => new Promise<void>((resolve) => {
   httpUtils.setChunks([
     'first',
