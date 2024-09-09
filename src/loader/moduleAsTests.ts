@@ -13,6 +13,7 @@ export const moduleAsTests = (state: RunningState, module: Module, skip: boolean
 
   const entries = Object.entries(imported);
   const tests = entries.filter(isTest);
+  state.total += tests.length;
 
   if (skip) {
     state.skipped += tests.length;

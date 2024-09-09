@@ -16,6 +16,7 @@ export const runTests = async (suite: TestSuite, state: RunningState) => {
       siblings: suite.tests.length
     };
     await runTest(test, setup, info, state);
+    if (state.failFast && state.failed > 0) break;
   }
   await setup.afterAll?.();
   await state.afterSuite?.();

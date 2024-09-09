@@ -11,7 +11,8 @@ export interface TestRunOptions extends SuiteSetup {
   excessTests: number,
   beforeSuite?: Function,
   afterSuite?: Function,
-  timeoutMs?: number
+  timeoutMs?: number,
+  failFast?: boolean
 }
 interface TestInfo {
   parents: string[],
@@ -23,6 +24,7 @@ interface TestInfo {
 }
 
 interface RunningState {
+  total: number,
   passed: number,
   failed: number,
   skipped: number,
@@ -36,7 +38,8 @@ interface RunningState {
   afterEach?: Function,
   afterSuite?: Function,
   afterAll?: Function,
-  timeoutMs: number
+  timeoutMs: number,
+  failFast: boolean
 }
 type SuiteInfo = {
   focused?: boolean

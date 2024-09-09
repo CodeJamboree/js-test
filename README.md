@@ -64,7 +64,8 @@ run({
   folderPath: 'build/src',
   testFilePattern: /$([xf]_)?(.*)\.test\.js$/,
   testFileReplacement: '$2', // replacer for filename pattern
-  timeoutMs: 10000 // Limit time for tests to run
+  timeoutMs: 10000, // Limit time for tests to run
+  failFast: true // Stop all testing once a test fails
 })
 ```
 
