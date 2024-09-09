@@ -1,4 +1,5 @@
 import { run } from "../src/index.js";
+import { logger } from '@codejamboree/js-logger';
 
 const main = async () =>
   await run({
@@ -7,20 +8,23 @@ const main = async () =>
     testFileReplacement: '$2',
     timeoutMs: 1000,
     failFast: true,
-    randomOrder: true
+    randomOrder: true,
+    beforeEach: () => logger.restore(),
+    afterEach: () => logger.attach()
   });
 
 try {
-  console.info('Test')
+  logger.title('Test');
+  logger.attach();
   main()
     .then(() => {
-      console.log('test run completed.');
+      console.info('test run completed.');
     })
-    .catch(e => console.error(e))
+    .catch(logger.logError)
     .finally(() => {
-      console.info('done');
+      logger.done();
     });
 } catch (e) {
-  console.error(e);
-  console.info('done');
+  logger.logError(e);
+  logger.done();
 }

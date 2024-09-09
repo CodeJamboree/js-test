@@ -5,5 +5,5 @@ export const logSuite = (key: string, state: RunningState) => {
   const {
     parents: { length: depth }
   } = state;
-  console.info(indent(depth, key));
+  console.debug(indent(depth, key));
 }
