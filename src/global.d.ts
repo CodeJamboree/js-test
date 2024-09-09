@@ -26,7 +26,7 @@ interface TestResult {
   filePath: string
 }
 
-interface Results {
+export interface Results {
   total: number,
   passed: number,
   failed: number,
