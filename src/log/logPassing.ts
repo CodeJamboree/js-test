@@ -1,19 +1,19 @@
-import { RunningState, TestInfo } from "../global.js";
+import { RunningState, TestState } from "../global.js";
 import { indent } from "./indent.js";
 
 const prefix = 'pass: ';
 
-export const logPassing = (test: TestInfo, state: RunningState) => {
+export const logPassing = (testState: TestState, runningState: RunningState) => {
   const {
     name,
     index,
     siblings,
     parents: { length: depth }
-  } = test;
-  if (state.excessTests <= 0) return;
-  if (index < state.excessTests || index === siblings) {
+  } = testState;
+  if (runningState.excessTests <= 0) return;
+  if (index < runningState.excessTests || index === siblings) {
     console.info(indent(depth, `${prefix}${name}`));
-  } else if (index === state.excessTests) {
+  } else if (index === runningState.excessTests) {
     console.debug(indent(depth, `${prefix}...`));
   }
 }

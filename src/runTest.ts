@@ -1,12 +1,12 @@
-import { RunningState, SuiteSetup, TestInfo } from "./global.js";
+import { RunningState, SuiteSetup, TestState } from "./global.js";
 import { logFailing } from "./log/logFailing.js";
 import { logPassing } from "./log/logPassing.js";
 
-export const runTest = async (test: Function, setup: SuiteSetup, info: TestInfo, state: RunningState) => {
+export const runTest = async (test: Function, setup: SuiteSetup, testState: TestState, runningState: RunningState) => {
   try {
-    await state.beforeEach?.();
+    await runningState.beforeEach?.();
     await setup.beforeEach?.();
-    let { timeoutMs } = state;
+    let { timeoutMs } = runningState;
     if ('timeoutMs' in test) {
       timeoutMs = test.timeoutMs as number;
     }
@@ -34,15 +34,15 @@ export const runTest = async (test: Function, setup: SuiteSetup, info: TestInfo,
       }
     });
     await setup.afterEach?.();
-    await state.afterEach?.();
-    state.passed++;
-    logPassing(info, state);
+    await runningState.afterEach?.();
+    runningState.passed++;
+    logPassing(testState, runningState);
   } catch (error) {
     await setup.afterEach?.();
-    await state.afterEach?.();
-    info.error = error;
-    state.failures.push(info);
-    state.failed++;
-    logFailing(info, state);
+    await runningState.afterEach?.();
+    testState.error = error;
+    runningState.failures.push(testState);
+    runningState.failed++;
+    logFailing(testState, runningState);
   }
 }

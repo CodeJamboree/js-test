@@ -14,21 +14,26 @@ export interface TestRunOptions extends SuiteSetup {
   timeoutMs?: number,
   failFast?: boolean
 }
-interface TestInfo {
+interface TestState extends TestResult {
   parents: string[],
-  name: string,
   index: number,
   siblings: number,
+}
+interface TestResult {
+  name: string,
   error?: unknown,
   filePath: string
 }
 
-interface RunningState {
+interface Results {
   total: number,
   passed: number,
   failed: number,
   skipped: number,
-  failures: TestInfo[],
+  failures: TestResult[],
+}
+
+interface RunningState extends Results {
   hasFocused: boolean,
   excessTests: number,
   parents: string[],
@@ -39,7 +44,8 @@ interface RunningState {
   afterSuite?: Function,
   afterAll?: Function,
   timeoutMs: number,
-  failFast: boolean
+  failFast: boolean,
+  failures: TestState[]
 }
 type SuiteInfo = {
   focused?: boolean

@@ -1,16 +1,16 @@
 
 import { ExpectationError } from "../expect/ExpectationError.js";
-import { RunningState, TestInfo } from "../global.js";
+import { RunningState, TestState } from "../global.js";
 import { indent } from "./indent.js";
 import { logExpectationData } from "./logExpectationData.js";
 
-export const logFailing = (info: TestInfo, state: RunningState) => {
+export const logFailing = (testState: TestState, _runningState: RunningState) => {
   const {
     filePath,
     name,
     error,
     parents: { length: depth }
-  } = info;
+  } = testState;
   console.error(indent(depth, `fail: ${name} ${error}`));
   console.log(indent(depth + 1, filePath));
   if (!(error instanceof Error)) return;

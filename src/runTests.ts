@@ -1,23 +1,23 @@
-import { RunningState, TestInfo, TestSuite } from "./global.js";
+import { RunningState, TestState, TestSuite } from "./global.js";
 import { runTest } from "./runTest.js";
 
-export const runTests = async (suite: TestSuite, state: RunningState) => {
+export const runTests = async (suite: TestSuite, runningState: RunningState) => {
   const { setup } = suite;
-  await state.beforeSuite?.();
+  await runningState.beforeSuite?.();
   await setup.beforeAll?.();
   const tests = suite.tests;
   for (let testIndex = 0; testIndex < tests.length; testIndex++) {
     const [name, test] = tests[testIndex];
-    const info: TestInfo = {
+    const testState: TestState = {
       filePath: suite.filePath,
-      parents: state.parents.slice(),
+      parents: runningState.parents.slice(),
       name,
       index: testIndex,
       siblings: suite.tests.length
     };
-    await runTest(test, setup, info, state);
-    if (state.failFast && state.failed > 0) break;
+    await runTest(test, setup, testState, runningState);
+    if (runningState.failFast && runningState.failed > 0) break;
   }
   await setup.afterAll?.();
-  await state.afterSuite?.();
+  await runningState.afterSuite?.();
 }

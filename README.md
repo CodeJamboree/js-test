@@ -55,7 +55,7 @@ Setup and tear down the entire test run, individual modules, or individual tests
 }
 ```
 
-Other options
+Other options are available, as well as the final results are returned.
 
 ```js
 import { run } from '@codejamboree/js-test';
@@ -66,6 +66,17 @@ run({
   testFileReplacement: '$2', // replacer for filename pattern
   timeoutMs: 10000, // Limit time for tests to run
   failFast: true // Stop all testing once a test fails
+}).then(results => {
+  console.log('Failed', results.failed);
+  console.log('Passed', results.passed);
+  console.log('Skipped', results.skipped);
+  console.log('Total', results.total);
+  results.failures.forEach(failure => {
+    console.group(failure.name);
+    console.log('File', failure.filePath);
+    console.log('Error', failure.error);
+    console.groupEnd();
+  });
 })
 ```
 
