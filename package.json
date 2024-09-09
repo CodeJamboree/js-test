@@ -55,23 +55,16 @@
     "prepublishOnly": "npm run bundle",
     "test": "npm run build && node ./build/scripts/test.js"
   },
+  "homepage": "https://github.com/CodeJamboree/js-test#readme",
   "repository": {
     "type": "git",
-    "url": "x"
+    "url": "git+https://github.com/CodeJamboree/js-test.git"
   },
   "keywords": [
     "test",
     "testing",
-    "unit",
-    "testing",
     "tdd",
-    "bdd",
-    "test",
-    "driven",
-    "design",
-    "behavior",
-    "driven",
-    "design"
+    "bdd"
   ],
   "author": "Code Jamboree LLC",
   "license": "MIT",
