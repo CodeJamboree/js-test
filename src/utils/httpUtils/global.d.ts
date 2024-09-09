@@ -6,5 +6,6 @@ interface HttpState {
   statusCode?: number,
   statusMessage?: string,
   requestTimeoutMs: number,
-  responseTimeoutMs: number
+  responseTimeoutMs: number,
+  emitter: EventEmitter
 }

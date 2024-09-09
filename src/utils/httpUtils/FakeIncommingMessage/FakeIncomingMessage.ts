@@ -12,6 +12,13 @@ export class FakeIncomingMessage implements Partial<http.IncomingMessage> {
   url: string = '';
   readableEncoding: BufferEncoding | null = null;
 
+  private destinations: NodeJS.WritableStream[] = [];
+
+  pipe<T extends NodeJS.WritableStream>(destination: T, options?: { end?: boolean | undefined; } | undefined): T {
+    this.destinations.push(destination);
+    return destination;
+  }
+
   constructor() {
     this.headers = {};
     this.headersDistinct = Object.fromEntries(
@@ -134,17 +141,31 @@ export class FakeIncomingMessage implements Partial<http.IncomingMessage> {
   push(chunk: any, encoding?: BufferEncoding): boolean {
     let hadListeners = false;
 
-    if (chunk !== null) {
+    if (chunk === null) {
+      this.destinations.forEach(stream => {
+        stream.end(() => {
+          hadListeners = true;
+        });
+      });
+      hadListeners ||= this.emit('end');
+    } else {
       if (this.readableEncoding === null) {
         hadListeners = this.emit('data', chunk, encoding);
       } else {
         const text = new TextDecoder(this.readableEncoding).decode(chunk);
         hadListeners = this.emit('data', text);
       }
+
+      this.destinations.forEach(stream => {
+        stream.write(chunk, encoding, () => {
+          hadListeners = true;
+        });
+      });
     }
-    if (chunk === null) {
-      hadListeners ||= this.emit('end');
-    }
+
+
+
+
     return hadListeners;
   }
 

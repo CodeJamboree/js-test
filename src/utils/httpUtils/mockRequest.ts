@@ -31,25 +31,41 @@ export const mockRequest = (state: HttpState, isHttps: boolean, ...args: any[]):
 
   req = new state.FakeClientRequest(clientRequestArgs);
 
-  let requestEndTimeout: NodeJS.Timeout | undefined = setTimeout(() => {
-    req.emit('timeout');
-    req.emit('error', 'Request timed out');
-    clearTimeout(requestEndTimeout);
-    requestEndTimeout = undefined;
-  }, state.requestTimeoutMs);
+  let requestEndTimeout: NodeJS.Timeout | undefined = undefined;
 
-  req.on('finish', () => {
-
+  const clearRequestTimeout = () => {
     if (requestEndTimeout) {
       clearTimeout(requestEndTimeout);
       requestEndTimeout = undefined;
     }
-    let responseEndTimeout: NodeJS.Timeout | undefined = setTimeout(() => {
+    state.emitter.off('restore', clearRequestTimeout);
+  }
+  requestEndTimeout = setTimeout(() => {
+    clearRequestTimeout();
+    req.emit('timeout');
+    req.emit('error', 'Request timed out');
+  }, state.requestTimeoutMs);
+
+  state.emitter.once('restore', clearRequestTimeout);
+
+
+  req.on('finish', () => {
+    clearRequestTimeout();
+    let responseEndTimeout: NodeJS.Timeout | undefined = undefined;
+
+    const clearResponseTimeout = () => {
+      if (responseEndTimeout) {
+        clearTimeout(responseEndTimeout);
+        responseEndTimeout = undefined;
+      }
+      state.emitter.off('restore', clearResponseTimeout);
+    }
+    responseEndTimeout = setTimeout(() => {
+      clearResponseTimeout();
       res.emit('timeout');
       res.emit('error', 'Response timed out');
-      clearTimeout(responseEndTimeout);
-      responseEndTimeout = undefined;
     }, state.responseTimeoutMs);
+    state.emitter.once('restore', clearResponseTimeout);
 
     let res: http.IncomingMessage = new state.FakeIncomingMessage(req.socket);
 
@@ -66,10 +82,7 @@ export const mockRequest = (state: HttpState, isHttps: boolean, ...args: any[]):
     }
 
     res.on('end', () => {
-      if (responseEndTimeout) {
-        clearTimeout(responseEndTimeout);
-        responseEndTimeout = undefined;
-      }
+      clearResponseTimeout();
     });
 
     req.emit('response', res);
@@ -79,5 +92,6 @@ export const mockRequest = (state: HttpState, isHttps: boolean, ...args: any[]):
     });
     res.push(null);
   });
+
   return req;
 }
