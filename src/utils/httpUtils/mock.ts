@@ -1,5 +1,14 @@
+//
+// WARN: do not import * as http
+// WARN: do not import * as http
+// WARN: do not import * as http
+//
 import http from 'http';
 import https from 'https';
+//
+//
+//
+
 import { mockRequest } from './mockRequest.js';
 
 export const mock = (state: HttpState) => {

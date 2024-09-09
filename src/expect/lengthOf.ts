@@ -5,9 +5,9 @@ export const lengthOf = function <T>(this: Expect<T>, expected: number) {
   const length = parseLength(this.actual);
   if (this.negate) {
     if (length === expected)
-      throw new ExpectationError(`length`, this, { expected, actual: length });
+      throw new ExpectationError(length, 'length equals', expected, this.details);
   } else if (length !== expected) {
-    throw new ExpectationError(`not length`, this, { expected, actual: length });
+    throw new ExpectationError(length, `not length equal to`, expected, this.details);
   }
 }
 

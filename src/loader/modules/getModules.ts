@@ -1,7 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 
-export type Module = Record<string, Function>;
+export type Module = {
+  file: string,
+  name: string,
+  filePath: string,
+  imported: Record<string, Function>
+}
 export type ModuleList = {
   [key: string]: ModuleList | Module
 }
@@ -36,7 +41,14 @@ export const getModules = async (dir: fs.PathLike, pattern: RegExp, replacement:
             break;
         }
         const fullPath = path.resolve(process.cwd(), filePath);
-        modules[name] = await import(fullPath);
+        const imported = await import(fullPath);
+        const module: Module = {
+          file,
+          name,
+          filePath,
+          imported
+        };
+        modules[name] = module;
       }
     }
   }

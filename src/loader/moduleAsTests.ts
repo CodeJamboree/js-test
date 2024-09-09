@@ -6,8 +6,12 @@ import { isTest } from "./isTest.js";
 import { isTestSetup } from "./isTestSetup.js";
 
 export const moduleAsTests = (state: RunningState, module: Module, skip: boolean): TestSuite | undefined => {
+  const {
+    imported,
+    filePath
+  } = module;
 
-  const entries = Object.entries(module);
+  const entries = Object.entries(imported);
   const tests = entries.filter(isTest);
 
   if (skip) {
@@ -24,6 +28,7 @@ export const moduleAsTests = (state: RunningState, module: Module, skip: boolean
   const focused = runnable.some(([key]) => isFocusedName(key));
 
   return {
+    filePath,
     runnable: runnable.length,
     focused,
     setup: Object.fromEntries(setup),

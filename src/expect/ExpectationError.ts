@@ -1,14 +1,18 @@
-import { Expect } from "./global.js";
-
 export class ExpectationError extends Error {
-  data: object | undefined = undefined;
-  constructor(message: string, { actual, details }: Expect<any>, data: NonNullable<object> = {}) {
+  actual: any;
+  details?: string;
+  expected?: any;
+  compare: string;
+  constructor(actual: any, compare: string, expected: any, details?: string) {
+    const message = `Failed expectation: ${actual} ${compare} ${expected}`;
     super(message);
-    this.data = {
-      actual,
-      details,
-      ...data
-    };
+    this.actual = actual;
+    this.details = details;
+    this.expected = expected;
+    this.compare = compare;
+  }
+  toJSON() {
+    return `${this.constructor.name}: ${this.message}`;
   }
   toString() {
     return `${this.constructor.name}: ${this.message}`;

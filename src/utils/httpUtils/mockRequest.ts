@@ -1,9 +1,7 @@
 import http from 'http';
 import https from 'https';
-import { chunks } from './httpUtils.test';
 
 export const mockRequest = (state: HttpState, isHttps: boolean, ...args: any[]): http.ClientRequest => {
-
   let req: http.ClientRequest;
   let first: string | URL | http.ClientRequestArgs = args[0];
   let second: https.RequestOptions | ((res: http.IncomingMessage) => void) = args[1];
@@ -31,7 +29,7 @@ export const mockRequest = (state: HttpState, isHttps: boolean, ...args: any[]):
   }
   const url = new URL(`${clientRequestArgs.protocol ?? 'http:'}//${clientRequestArgs.host ?? 'localhost'}${clientRequestArgs.path}`);
 
-  req = new state.clientRequest(clientRequestArgs);
+  req = new state.FakeClientRequest(clientRequestArgs);
 
   let requestEndTimeout: NodeJS.Timeout | undefined = setTimeout(() => {
     req.emit('timeout');
@@ -53,7 +51,7 @@ export const mockRequest = (state: HttpState, isHttps: boolean, ...args: any[]):
       responseEndTimeout = undefined;
     }, state.responseTimeoutMs);
 
-    let res: http.IncomingMessage = new state.incomingMessage(req.socket);
+    let res: http.IncomingMessage = new state.FakeIncomingMessage(req.socket);
 
     res.url = url.toString();
 

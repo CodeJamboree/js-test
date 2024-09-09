@@ -18,7 +18,8 @@ interface TestInfo {
   name: string,
   index: number,
   siblings: number,
-  error?: unknown
+  error?: unknown,
+  filePath: string
 }
 
 interface RunningState {
@@ -46,7 +47,8 @@ type Entries<T> = Entry<T>[];
 
 interface TestSuite extends SuiteInfo {
   setup: SuiteSetup,
-  tests: Entries<Function>
+  tests: Entries<Function>,
+  filePath: string
 }
 interface TestSuites extends SuiteInfo {
   suites: Entries<TestSuite | TestSuites>

@@ -13,15 +13,17 @@ export class FakeIncomingMessage implements Partial<http.IncomingMessage> {
   readableEncoding: BufferEncoding | null = null;
 
   constructor() {
-    this.headers = {
-      'x-fake': this.constructor.name
-    }
-
+    this.headers = {};
     this.headersDistinct = Object.fromEntries(
       Object.entries(this.headers)
         .map(
           ([name, value]) => [name, Array.isArray(value) ? value : value ? [value] : []]
         ));
+  }
+  toJSON(): string {
+    return `[FakeIncomingMessage] ${this.url} ${JSON.stringify({
+      headers: this.headers
+    })}`;
   }
 
   setEncoding(encoding: BufferEncoding): http.IncomingMessage {

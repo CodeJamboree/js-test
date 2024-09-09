@@ -4,9 +4,9 @@ import { ExpectationError } from "./ExpectationError.js";
 export const below = function <T>(this: Expect<T>, expected: T) {
   if (this.negate) {
     if (this.actual >= expected) return;
-    throw new ExpectationError(`not below`, this, { expected });
+    throw new ExpectationError(this.actual, `below`, expected, this.details);
   } else {
     if (this.actual < expected) return;
-    throw new ExpectationError(`below`, this, { expected });
+    throw new ExpectationError(this.actual, `not below`, expected, this.details);
   }
 }

@@ -24,9 +24,14 @@ export const runTest = async (test: Function, setup: SuiteSetup, info: TestInfo,
 
         reject(`Test timed out after ${time}`);
       }, timeoutMs);
-      await test();
-      clearTimeout(timeout);
-      resolve();
+      try {
+        await test();
+        resolve();
+      } catch (e) {
+        reject(e);
+      } finally {
+        clearTimeout(timeout);
+      }
     });
     await setup.afterEach?.();
     await state.afterEach?.();

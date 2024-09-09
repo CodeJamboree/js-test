@@ -9,8 +9,8 @@ import { mock } from './mock.js';
 import { setResponseData } from './setResponseData.js';
 
 const state: HttpState = {
-  clientRequest: FakeClientRequest,
-  incomingMessage: FakeIncomingMessage,
+  FakeClientRequest,
+  FakeIncomingMessage,
   mocked: false,
   requestTimeoutMs: 100,
   responseTimeoutMs: 100

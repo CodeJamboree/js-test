@@ -1,26 +1,10 @@
-export const logExpectationData = (data: Record<string, any>) =>
-  Object.entries(data).forEach(writeValue);
+import { ExpectationError } from "../expect/ExpectationError";
+import { indent } from "./indent.js";
 
-const writeValue = ([key, value]: [string, any]): void => {
-  switch (key) {
-    case 'expected':
-    case 'expectedValue':
-      console.info('Expected:', value);
-      break;
-    case 'actual':
-    case 'actualValue':
-      console.info('Actual:', value);
-      break;
-    case 'unexpected':
-    case 'unexpectedValue':
-      console.info('Not Expected:', value);
-      break;
-    case 'details':
-      if (value !== undefined) {
-        console.debug('Details:', value);
-      }
-      break;
-    default:
-      console.debug(`${key}:`, value);
-  }
+export const logExpectationData = (depth: number, error: ExpectationError) => {
+  console.debug(indent(depth, `Actual:`), error.actual);
+  console.debug(indent(depth, `Reason:`), error.compare);
+  console.debug(indent(depth, `Expected:`), error.expected);
+  if (error.details)
+    console.debug(indent(depth, `Details:`), error.details);
 }

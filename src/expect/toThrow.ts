@@ -6,10 +6,10 @@ export const toThrow = function <T extends Function>(this: Expect<T>, error?: Er
   tryThrowing(this, error, out);
   if (this.negate) {
     if (out.thrown)
-      throw new ExpectationError(`not throws`, this, { expected: error });
+      throw new ExpectationError(this.actual, `threw`, error ?? '', this.details);
   } else {
     if (!out.thrown)
-      throw new ExpectationError(`throws`, this, { expected: error });
+      throw new ExpectationError(this.actual, `did not throw`, error ?? '', this.details);
   }
 }
 
@@ -17,20 +17,21 @@ const tryThrowing = (expect: Expect<Function>, error: Error | string | undefined
   out.thrown = false;
   try {
     expect.actual();
-  } catch (e) {
+  } catch (actualError) {
     out.thrown = true;
     if (typeof error === 'undefined') return;
-    if (error === e) return;
+    if (error === actualError) return;
     if (typeof error === 'string') {
-      if (e instanceof Error) {
-        if (e.message === error) return;
-        if (expect.negate) {
-          throw new ExpectationError(`not throws`, expect, { actual: e.message, expected: error });
-        } else {
-          throw new ExpectationError(`throws`, expect, { actual: e.message, expected: error });
+      if (actualError instanceof Error) {
+        if (expect.negate && actualError.message === error) {
+          const name = `[Function ${expect.actual.name ?? '(anonymous)'}]`;
+          throw new ExpectationError(name, `threw`, error, expect.details);
+        } else if (!expect.negate && actualError.message !== error) {
+          throw new ExpectationError(actualError.message, `is not equal`, error, expect.details);
         }
+        return;
       }
     }
-    expect.and(e).equals(error);
+    expect.and(actualError).equals(error);
   }
 }

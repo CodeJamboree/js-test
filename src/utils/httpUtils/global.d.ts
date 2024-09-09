@@ -1,6 +1,6 @@
 interface HttpState {
-  clientRequest: Partial<http.ClientRequest>,
-  incomingMessage: Partial<http.IncomingMessage>,
+  FakeClientRequest: Partial<http.ClientRequest>,
+  FakeIncomingMessage: Partial<http.IncomingMessage>,
   chunks?: Uint8Array[],
   mocked: boolean,
   statusCode?: number,

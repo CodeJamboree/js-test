@@ -29,7 +29,12 @@ export class FakeClientRequest implements Partial<http.ClientRequest> {
       });
     }
   }
-
+  toJSON(): string {
+    const url = new URL(`${this.protocol}//${this.host}${this.path}`);
+    return `[FakeClientRequest] ${url} ${this.method} ${JSON.stringify({
+      headers: this.headers
+    })}`;
+  }
   hasHeader(name: string): boolean {
     return (name.toLowerCase() in this.headers);
   }

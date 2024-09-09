@@ -6,44 +6,29 @@ export const instanceOf = function <T extends NonNullable<object>>(this: Expect<
     if (this.negate) {
       return;
     } else {
-      throw new ExpectationError('instanceOf', this, {
-        expected,
-        actual: typeof this.actual
-      });
+      throw new ExpectationError(typeof this.actual, `not instance`, expected, this.details);
     }
   }
+  const name = this.actual.constructor.name;
   if (typeof expected === 'string') {
-    const name = this.actual.constructor.name;
     if (this.negate) {
       if (name === expected) {
-        throw new ExpectationError('not instanceOf', this, {
-          expected,
-          actual: name
-        });
+        throw new ExpectationError(name, `instance of`, expected, this.details);
       }
     } else {
       if (name !== expected) {
-        throw new ExpectationError('instanceOf', this, {
-          expected,
-          actual: name
-        });
+        throw new ExpectationError(name, `not instance of`, expected, this.details);
       }
     }
     return;
   }
   if (this.negate) {
     if (this.actual instanceof expected) {
-      throw new ExpectationError('not instanceOf', this, {
-        expected,
-        actual: this.actual.constructor.name ?? this.actual
-      });
+      throw new ExpectationError(name, `instance of`, expected, this.details);
     }
   } else {
     if (!(this.actual instanceof expected)) {
-      throw new ExpectationError('instanceOf', this, {
-        expected,
-        actual: this.actual.constructor.name ?? this.actual
-      });
+      throw new ExpectationError(name, `not instance of`, expected, this.details);
     }
   }
 }
