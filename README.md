@@ -17,13 +17,13 @@ A simple test platform.
 
 # Running tests
 
-The following will find all files in the `build/src` folder that end with `.test.js`, and run them.
+The following will find all files in the `src` folder that end with `.test.js`, and run them.
 
 ```js
 import { run } from '@codejamboree/js-test';
 
 run({
-  folderPath: 'build/src',
+  folderPath: 'src',
   testFilePattern: /\.test\.js$/
 }).then(() => {
   console.log('done');
@@ -61,11 +61,12 @@ Other options are available, as well as the final results are returned.
 import { run } from '@codejamboree/js-test';
 
 run({
-  folderPath: 'build/src',
+  folderPath: 'src',
   testFilePattern: /$([xf]_)?(.*)\.test\.js$/,
   testFileReplacement: '$2', // replacer for filename pattern
-  timeoutMs: 10000, // Limit time for tests to run
-  failFast: true // Stop all testing once a test fails
+  timeoutMs: 300, // Limit time for each test to run
+  failFast: true, // Stop all testing once a test fails
+  randomOrder: true // Randomize the test order
 }).then(results => {
   console.log('Failed', results.failed);
   console.log('Passed', results.passed);

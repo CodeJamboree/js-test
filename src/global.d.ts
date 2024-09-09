@@ -12,7 +12,8 @@ export interface TestRunOptions extends SuiteSetup {
   beforeSuite?: Function,
   afterSuite?: Function,
   timeoutMs?: number,
-  failFast?: boolean
+  failFast?: boolean,
+  randomOrder?: boolean
 }
 interface TestState extends TestResult {
   parents: string[],
@@ -45,7 +46,8 @@ interface RunningState extends Results {
   afterAll?: Function,
   timeoutMs: number,
   failFast: boolean,
-  failures: TestState[]
+  failures: TestState[],
+  randomOrder: boolean
 }
 type SuiteInfo = {
   focused?: boolean
@@ -60,7 +62,5 @@ interface TestSuite extends SuiteInfo {
   filePath: string
 }
 interface TestSuites extends SuiteInfo {
-  suites: Entries<TestSuite | TestSuites>
+  suites: Entries<TestSuite>
 }
-
-type SuiteOrSuites = TestSuite | TestSuites;

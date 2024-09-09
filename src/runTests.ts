@@ -6,6 +6,7 @@ export const runTests = async (suite: TestSuite, runningState: RunningState) => 
   await runningState.beforeSuite?.();
   await setup.beforeAll?.();
   const tests = suite.tests;
+
   for (let testIndex = 0; testIndex < tests.length; testIndex++) {
     const [name, test] = tests[testIndex];
     const testState: TestState = {

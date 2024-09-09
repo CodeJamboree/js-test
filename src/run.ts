@@ -7,7 +7,7 @@ import { logSummary } from './log/logSummary.js';
 export const run = async ({
   testFilePattern = /\.test\.js$/,
   testFileReplacement,
-  folderPath = 'build/src',
+  folderPath = 'src',
   excessTests = Infinity,
   beforeAll,
   beforeSuite,
@@ -16,7 +16,8 @@ export const run = async ({
   afterSuite,
   afterAll,
   timeoutMs = Infinity,
-  failFast = false
+  failFast = false,
+  randomOrder = false
 }: Partial<TestRunOptions>): Promise<Results> => {
 
   const state: RunningState = {
@@ -35,7 +36,8 @@ export const run = async ({
     afterAll,
     afterEach,
     timeoutMs,
-    failFast
+    failFast,
+    randomOrder
   };
 
   let modules = await getModules(folderPath, testFilePattern, testFileReplacement);

@@ -6,9 +6,9 @@ const main = async () =>
     testFilePattern: /([xf]_)?(.*)\.test\.js$/,
     testFileReplacement: '$2',
     timeoutMs: 1000,
-    failFast: true
+    failFast: true,
+    randomOrder: true
   });
-
 
 try {
   console.info('Test')
