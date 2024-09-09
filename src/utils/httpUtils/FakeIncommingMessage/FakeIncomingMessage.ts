@@ -12,10 +12,16 @@ export class FakeIncomingMessage implements Partial<http.IncomingMessage> {
   url: string = '';
   readableEncoding: BufferEncoding | null = null;
 
-  private destinations: NodeJS.WritableStream[] = [];
+  private destinations: {
+    stream: NodeJS.WritableStream,
+    end: boolean
+  }[] = [];
 
   pipe<T extends NodeJS.WritableStream>(destination: T, options?: { end?: boolean | undefined; } | undefined): T {
-    this.destinations.push(destination);
+    this.destinations.push({
+      stream: destination,
+      end: options?.end ?? true
+    });
     return destination;
   }
 
@@ -140,10 +146,10 @@ export class FakeIncomingMessage implements Partial<http.IncomingMessage> {
 
   push(chunk: any, encoding?: BufferEncoding): boolean {
     let hadListeners = false;
-
     if (chunk === null) {
-      this.destinations.forEach(stream => {
-        stream.end(() => {
+      this.destinations.forEach(destination => {
+        if (!destination.end) return;
+        destination.stream.end(() => {
           hadListeners = true;
         });
       });
@@ -155,17 +161,12 @@ export class FakeIncomingMessage implements Partial<http.IncomingMessage> {
         const text = new TextDecoder(this.readableEncoding).decode(chunk);
         hadListeners = this.emit('data', text);
       }
-
-      this.destinations.forEach(stream => {
-        stream.write(chunk, encoding, () => {
+      this.destinations.forEach(destination => {
+        destination.stream.write(chunk, encoding, () => {
           hadListeners = true;
         });
       });
     }
-
-
-
-
     return hadListeners;
   }
 
