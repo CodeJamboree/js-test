@@ -18,7 +18,7 @@ const parseLength = <T>(target: T) => {
       if (target === null) {
         length = 'invalid (null)';
       } else if ('length' in target) {
-        length = target;
+        length = target.length;
       } else {
         length = 'invalid key';
       }
