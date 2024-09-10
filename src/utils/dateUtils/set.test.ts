@@ -3,6 +3,8 @@ import { set } from './set.js';
 import { restore } from './restore.js';
 import { FakeDate } from './FakeDate.js';
 
+const delayMs = 10;
+
 export const afterEach = () => {
   restore();
 }
@@ -45,6 +47,7 @@ export const setYmd = () => {
   expect(new Date().getSeconds()).is(1);
   expect(new Date().getMilliseconds()).is(184);
 }
+
 export const NoTimePasses = async () => {
   return new Promise<void>((resolve) => {
 
@@ -52,13 +55,16 @@ export const NoTimePasses = async () => {
     setTimeout(() => {
 
       expect(new Date().getTime()).is(123);
+      restore();
 
       resolve();
 
-    }, 100);
+    }, delayMs);
 
   });
 }
+NoTimePasses.timeoutMs = delayMs + 10;
+
 export const timePassesIfNotSet = async () => {
   return new Promise<void>((resolve) => {
 
@@ -67,14 +73,15 @@ export const timePassesIfNotSet = async () => {
     setTimeout(() => {
 
       expect(new Date().getTime()).above(time);
+      restore();
 
       resolve();
 
-    }, 100);
+    }, delayMs);
 
   });
 }
-
+timePassesIfNotSet.timeoutMs = delayMs + 10;
 
 export const timeRestored = () => {
   set(Date.UTC(1975, 4, 28, 3, 15, 1, 184));

@@ -1,7 +1,9 @@
+import { ExpectationError } from "./expect/ExpectationError.js";
 import { RunningState, SuiteSetup, TestFunction, TestState } from "./global.js";
 import { logFailing } from "./log/logFailing.js";
 import { logPassing } from "./log/logPassing.js";
 
+const maxSignedInt32 = 0x7FFFFFFF;
 export const runTest = async (test: TestFunction, setup: SuiteSetup, testState: TestState, runningState: RunningState) => {
   try {
     await runningState.beforeEach?.();
@@ -11,12 +13,12 @@ export const runTest = async (test: TestFunction, setup: SuiteSetup, testState: 
     if ('timeoutMs' in test) {
       timeoutMs = test.timeoutMs as number;
     }
-    if (timeoutMs > 0x7FFFFFFF) {
-      timeoutMs = 0x7FFFFFFF;
+    if (timeoutMs > maxSignedInt32) {
+      timeoutMs = maxSignedInt32;
     } else if (timeoutMs < 0) {
       timeoutMs = 0;
     }
-    await new Promise<void>(async (resolve, reject) => {
+    let durationMs = await new Promise<number>(async (resolve, reject) => {
       let timeout = setTimeout(() => {
 
         const time = timeoutMs >= 1000 ?
@@ -26,8 +28,9 @@ export const runTest = async (test: TestFunction, setup: SuiteSetup, testState: 
         reject(`Test timed out after ${time}`);
       }, timeoutMs);
       try {
+        const timestamp = performance.now();
         await test();
-        resolve();
+        resolve(performance.now() - timestamp);
       } catch (e) {
         reject(e);
       } finally {
@@ -37,6 +40,9 @@ export const runTest = async (test: TestFunction, setup: SuiteSetup, testState: 
     await test.after?.();
     await setup.afterEach?.();
     await runningState.afterEach?.();
+    if (![maxSignedInt32, 0].includes(timeoutMs) && durationMs > timeoutMs) {
+      throw new ExpectationError(durationMs, 'greater than', timeoutMs, 'timeout');
+    }
     runningState.passed++;
     logPassing(testState, runningState);
   } catch (error) {

@@ -1,6 +1,8 @@
 import { chronoUtils } from "../index.js";
 import { expect } from "../../expect/expect.js";
 
+const delayMs = 4;
+
 export const afterEach = () => {
   chronoUtils.restore();
 }
@@ -38,7 +40,6 @@ export const freezesPerfromance = () => {
 }
 
 export const freezesDate = async () => {
-  const delayMs = 4;
   return new Promise<void>((resolve) => {
     const date1 = new Date();
     setTimeout(() => {
@@ -60,9 +61,11 @@ export const freezesDate = async () => {
             expect(date6, 'restored').not().equals(date5);
             resolve();
           }, delayMs)
-
         }, delayMs);
       }, delayMs);
     }, delayMs);
+  }).finally(() => {
+    chronoUtils.restore();
   });
 }
+freezesDate.timeoutMs = (delayMs * 4) + 10;

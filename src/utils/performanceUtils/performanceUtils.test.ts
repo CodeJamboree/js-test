@@ -14,6 +14,7 @@ export const timeFrozen = () => {
   const now1 = performance.now();
   const now2 = performance.now();
   expect(now1).is(now2);
+  performanceUtils.restore();
 }
 export const timeRestored = () => {
   performanceUtils.freeze();
@@ -26,4 +27,5 @@ export const timeSet = () => {
   performanceUtils.set(8675309);
   const now1 = performance.now();
   expect(now1).is(8675309);
+  performanceUtils.restore();
 }

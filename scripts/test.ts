@@ -6,7 +6,7 @@ const main = async () =>
     folderPath: 'build/src',
     testFilePattern: /([xf]_)?(.*)\.test\.js$/,
     testFileReplacement: '$2',
-    timeoutMs: 1000,
+    timeoutMs: 5,
     failFast: true,
     randomOrder: true,
     beforeEach: () => logger.restore(),
