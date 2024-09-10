@@ -1,11 +1,9 @@
 import { expect } from "../expect/expect.js"
 import { TestFunction } from "../global.js";
-import testCasesTest from "./splitTestCases.json" with {type: "json"};
 
 export const testCaseTest: TestFunction = (firstAddend: number, secondAddend: number, sum: number) => {
   expect(firstAddend + secondAddend).is(sum);
 }
-
 
 testCaseTest.testCases = [
   [37, 5, 42],
@@ -14,11 +12,6 @@ testCaseTest.testCases = [
   [32, 56, 88],
   [83, 12, 95]
 ];
-
-export const testCaseFile: TestFunction = (firstAddend: number, secondAddend: number, sum: number) => {
-  expect(firstAddend + secondAddend).is(sum);
-}
-testCaseFile.testCases = testCasesTest;
 
 let _before = 0;
 export const testBefore = (newNum: number) => {
