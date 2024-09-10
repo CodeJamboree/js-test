@@ -1,6 +1,6 @@
 {
   "name": "@codejamboree/js-test",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "testing framework for javascript",
   "type": "module",
   "main": "dist/commonjs/index.min.cjs",
