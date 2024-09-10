@@ -2,15 +2,17 @@ import fs from 'fs';
 
 type SetupName = 'beforeAll' | 'beforeEach' | 'afterEach' | 'afterAll';
 
-type SuiteSetup = Partial<Record<SetupName, Function>>;
+type SetupFunction = () => void | Promise<void>;
+
+type SuiteSetup = Partial<Record<SetupName, SetupFunction>>;
 
 export interface TestRunOptions extends SuiteSetup {
   folderPath: fs.PathLike,
   testFilePattern: RegExp,
   testFileReplacement: string | ((substring: string, ...args: any[]) => string),
   excessTests: number,
-  beforeSuite?: Function,
-  afterSuite?: Function,
+  beforeSuite?: SetupFunction,
+  afterSuite?: SetupFunction,
   timeoutMs?: number,
   failFast?: boolean,
   randomOrder?: boolean
@@ -38,12 +40,12 @@ interface RunningState extends Results {
   hasFocused: boolean,
   excessTests: number,
   parents: string[],
-  beforeAll?: Function,
-  beforeSuite?: Function,
-  beforeEach?: Function,
-  afterEach?: Function,
-  afterSuite?: Function,
-  afterAll?: Function,
+  beforeAll?: SetupFunction,
+  beforeSuite?: SetupFunction,
+  beforeEach?: SetupFunction,
+  afterEach?: SetupFunction,
+  afterSuite?: SetupFunction,
+  afterAll?: SetupFunction,
   timeoutMs: number,
   failFast: boolean,
   failures: TestState[],
@@ -53,14 +55,25 @@ type SuiteInfo = {
   focused?: boolean
   runnable: number
 }
-type Entry<T> = [string, T];
-type Entries<T> = Entry<T>[];
+export type Entry<T> = [key: string, value: T];
+export type Entries<T> = Entry<T>[];
 
 interface TestSuite extends SuiteInfo {
   setup: SuiteSetup,
-  tests: Entries<Function>,
+  tests: Entries<TestFunction>,
   filePath: string
 }
 interface TestSuites extends SuiteInfo {
   suites: Entries<TestSuite>
+}
+
+interface TestFunction<T extends (...args: any[]) => any = (...args: any[]) => any> {
+  (...args: Parameters<T>): ReturnType<T>;
+  timeoutMs?: number;
+  focus?: boolean;
+  skip?: boolean;
+  testCases?: Parameters<T>[];
+  testCaseIndex?: number;
+  before?: SetupFunction,
+  after?: SetupFunction
 }

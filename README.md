@@ -3,9 +3,11 @@
 A simple test platform.
 
 * Run tests
-  * Mark tests as skipped
-  * Mark tests as focused
-  * Setup/Teardown individual and entire tests
+  * Setup/Teardown all or individual tests
+  * Run the same test with multiple test cases
+  * Set timeout limits on all or individual tests
+  * Randomize test order
+  * Isolate or skip tests
 * Expectation helper
 * Mock functions
 * Spy & Fake standard output/error writes
@@ -80,8 +82,10 @@ run({
   });
 })
 ```
+# Test Suite
 
-A test suite runs all exported functions.
+A test suite is an individual file that exports functions as tests.
+
 ```js
 export const test1 = () => {
   let a = 1 + 2;
@@ -98,46 +102,81 @@ export const asyncTest = async () => {
 }
 asyncTest.timeoutMs = 200; // override timeout
 ```
+## Setup/Teardown
 
-Special methods are ran before/after each test, or the entire set of tests if present.
+Special methods are ran before/after each test, or the entire set of tests in the file if present.
 ```js
-export const beforeAll = () => {
-  // Ran once before all tests in the file
-}
-export const beforeEach = () => {
-  // Ran before each test
-}
-export const afterEach = () => {
-  // Ran after each test
-}
-export const afterAll = () => {
-  // Ran after all tests in the file have completed
-}
+export const beforeAll = () => {}
+export const beforeEach = () => {}
+export const afterEach = () => {}
+export const afterAll = () => {}
+export const test = () => {}
+test.before = () => {}
+test.after = () => {}
 ```
+## Testing Lifecycle
 
-Tests can be ignored by preceeding the name with an x_
+* runOptions.beforeAll()
+* loop through suites
+  * runOptions.beforeSuite()
+  * suite.beforeAll()
+  * loop through each test / test case
+    * runOptions.beforeEach()
+    * suite.beforeEach()
+    * test.before()
+    * setTimeout
+      * test()
+    * test.after()
+    * suite.afterEach()
+  * suite.afterAll()
+  * runOptions.afterSuite()
+* runOptions.afterAll()
+
+## Skipping Tests
+
+Tests can be ignored by preceeding the name with an x_, or flagging the .skip property
 ```js
-export const runningTest = () => {
+export const test = () => {
   // I will run
 }
-export const x_skippedTest = () => {
+export const x_stest = () => {
   // I will not run
 }
+export const flagged = () => {};
+flagged.skip = true; // ensure flagged will not run
 ```
-
-Tests can be focused by preceeding the name with an f_, causing all other tests in the file, and entire project to be ignored.
+## Focused Tests
+Tests can be isolated by preceeding the name with an f_ or flagging the .focus property, causing all other tests to be skipped.
 ```js
-export const f_focusedTest = () => {
+export const f_test = () => {
   // I will run
 }
-export const runningTest = () => {
+export const test = () => {
   // I will not run
 }
-export const x_skippedTest = () => {
-  // I will not run
-}
+export const flagged = () => {};
+flagged.focus = true; // ensure flagged will run
 ```
-Files that contain test may be renamed with `f_` and `x_` to focus and skip the entire suite of tests.
+Files and folders that contain tests may be renamed with `f_` and `x_` to focus and skip the entire file/directory of tests.
+
+## Test Cases
+A test may have multiple test cases assigned to use repeated testing logic with different testing vectors. In this scenario, your test will have arguments, and an array of arguments to be tested will be assigned to the functions `.testCases` property.
+```js
+export const test = (a, b, sum) => {
+  if(a + b !== sum) {
+    throw new Error(`${a + b} was not ${sum}`);
+  }
+}
+test.testCases = [
+  [37, 5, 42],
+  [51, 75, 126],
+  [22, 27, 49],
+  [32, 56, 88],
+  [83, 12, 95]
+]
+```
+
+When tests are ran with random order, the order of test cases will also be random.
 
 # Expectation
 

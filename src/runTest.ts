@@ -1,11 +1,12 @@
-import { RunningState, SuiteSetup, TestState } from "./global.js";
+import { RunningState, SuiteSetup, TestFunction, TestState } from "./global.js";
 import { logFailing } from "./log/logFailing.js";
 import { logPassing } from "./log/logPassing.js";
 
-export const runTest = async (test: Function, setup: SuiteSetup, testState: TestState, runningState: RunningState) => {
+export const runTest = async (test: TestFunction, setup: SuiteSetup, testState: TestState, runningState: RunningState) => {
   try {
     await runningState.beforeEach?.();
     await setup.beforeEach?.();
+    await test.before?.();
     let { timeoutMs } = runningState;
     if ('timeoutMs' in test) {
       timeoutMs = test.timeoutMs as number;
@@ -33,6 +34,7 @@ export const runTest = async (test: Function, setup: SuiteSetup, testState: Test
         clearTimeout(timeout);
       }
     });
+    await test.after?.();
     await setup.afterEach?.();
     await runningState.afterEach?.();
     runningState.passed++;

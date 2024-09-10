@@ -5,6 +5,7 @@ import { isRunnableTest } from "./isRunnableTest.js";
 import { isTest } from "./isTest.js";
 import { isTestSetup } from "./isTestSetup.js";
 import { sortRandomly } from "./sortRandomly.js";
+import { splitTestCases } from "./splitTestCases.js";
 
 export const moduleAsTests = (state: RunningState, module: Module, skip: boolean): TestSuite | undefined => {
   const {
@@ -13,7 +14,8 @@ export const moduleAsTests = (state: RunningState, module: Module, skip: boolean
   } = module;
 
   const entries = Object.entries(imported);
-  const tests = entries.filter(isTest);
+  const tests = entries.filter(isTest).reduce(splitTestCases, []);
+
   state.total += tests.length;
 
   if (skip) {
@@ -27,7 +29,7 @@ export const moduleAsTests = (state: RunningState, module: Module, skip: boolean
   if (runnable.length === 0) return;
 
   const setup = entries.filter<[SetupName, Function]>(isTestSetup);
-  const focused = runnable.some(([key]) => isFocusedName(key));
+  const focused = runnable.some(([key, test]) => test.focus || isFocusedName(key));
 
   if (state.randomOrder) sortRandomly(runnable);
 

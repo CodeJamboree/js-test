@@ -10,6 +10,7 @@ export const isRunnable = () => {
 }
 export const isNotFunction = () => {
   expect(
+    // @ts-expect-error
     isRunnableTest(['test1', 'not a function'], 0, [])
   ).is(false);
 }
@@ -42,6 +43,7 @@ export const isFocused = () => {
   const test1 = ['f_test1', noop] as [string, Function];
   const test2 = ['test2', noop] as [string, Function];
   expect(
+    // @ts-expect-error
     isRunnableTest(test1, 0, [test1, test2])
   ).is(true);
 }
@@ -49,6 +51,7 @@ export const isNormalWithOtherFocused = () => {
   const test1 = ['test1', noop] as [string, Function];
   const test2 = ['f_test2', noop] as [string, Function];
   expect(
+    // @ts-expect-error
     isRunnableTest(test1, 0, [test1, test2])
   ).is(false);
 }
@@ -56,6 +59,7 @@ export const isFocusedWithOtherFocused = () => {
   const test1 = ['f_test1', noop] as [string, Function];
   const test2 = ['f_test2', noop] as [string, Function];
   expect(
+    // @ts-expect-error
     isRunnableTest(test1, 0, [test1, test2])
   ).is(true);
 }

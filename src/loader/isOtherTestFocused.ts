@@ -1,7 +1,8 @@
+import { Entries, TestFunction } from "../global.js";
 import { isFocusedName } from "./isFocusedName.js";
-import { isTest } from "./isTest.js";
+import { isSkippedName } from "./isSkippedName.js";
 
-export const isOtherTestFocused = (excludeIndex: number, others: [string, any][]) => others
+export const isOtherTestFocused = (excludeIndex: number, others: Entries<TestFunction>) => others
   .toSpliced(excludeIndex, 1)
-  .filter(isTest)
-  .some(([key,]) => isFocusedName(key))
+  .filter(([key, value]) => !(value.skip || isSkippedName(key)))
+  .some(([key, value]) => value.focus || isFocusedName(key))
