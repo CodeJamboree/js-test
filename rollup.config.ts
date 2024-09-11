@@ -16,8 +16,15 @@ const prod = pkg.exports['./production'];
 
 const input = './src/index.ts';
 const external: string[] = ['fs', 'http'];
-const name = 'webRequestQueue';
 
+const name = pkg.name.replace(/^@.*\//, '');
+console.log()
+console.warn('Bundling', pkg.name, 'as', name);
+console.log()
+
+if (name === pkg.name) {
+  throw new Error('Name in package.json missing @scope');
+}
 const banner = read('LICENSE.md');
 
 const outFile = (file: string, format: 'esm' | 'commonjs'): OutputOptions => ({
