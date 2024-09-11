@@ -67,7 +67,7 @@ interface TestSuites extends SuiteInfo {
   suites: Entries<TestSuite>
 }
 
-interface TestFunction<T extends (...args: any[]) => any = (...args: any[]) => any> {
+export interface TestFunction<T extends (...args: any[]) => any = (...args: any[]) => any> {
   (...args: Parameters<T>): ReturnType<T>;
   timeoutMs?: number;
   focus?: boolean;
