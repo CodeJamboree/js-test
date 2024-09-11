@@ -1,6 +1,13 @@
 import { expect } from "./expect.js";
 import { serialize } from "./serialize.js";
 
+export const simpleObject = () => {
+  console.log(serialize({ foo: 'bar' }));
+  expect(serialize({ foo: 'bar' })).equals(`{
+  "foo": "bar"
+}`);
+}
+
 export const functionToJson = () => {
   const myFunction = () => { };
   myFunction.toJSON = () => 'A custom value';

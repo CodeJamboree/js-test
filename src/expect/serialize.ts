@@ -25,7 +25,7 @@ function replacer(this: any, key: string, value: any): any {
         return value;
       return `[array ${name}] ${serializeChild(Array.from(value))}`;
     }
-    if (name) {
+    if (name && name !== 'Object') {
       return `[object ${name}]`;
     }
   }
