@@ -2,7 +2,7 @@ import fs from 'fs';
 
 type SetupName = 'beforeAll' | 'beforeEach' | 'afterEach' | 'afterAll';
 
-type SetupFunction = () => void | Promise<void>;
+export type SetupFunction = () => void | Promise<void>;
 
 type SuiteSetup = Partial<Record<SetupName, SetupFunction>>;
 

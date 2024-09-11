@@ -10,6 +10,7 @@ import {
   httpUtils
 } from "./utils/index.js";
 import { expect } from "./expect/expect.js";
+import { TestFunction, SetupFunction, TestRunOptions, Results } from "./global.js";
 
 export {
   run,
@@ -21,5 +22,9 @@ export {
   processUtils,
   mathRandomUtils,
   httpUtils,
-  expect
+  expect,
+  TestFunction,
+  SetupFunction,
+  TestRunOptions,
+  Results
 }
