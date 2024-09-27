@@ -15,7 +15,8 @@ const dev = pkg.exports['./development'];
 const prod = pkg.exports['./production'];
 
 const input = './src/index.ts';
-const external: string[] = ['fs', 'http'];
+const dependencies = (!!pkg.dependencies ? Object.keys(pkg.dependencies) : []);
+const external: string[] = ['fs', 'http', ...dependencies];
 
 const name = pkg.name.replace(/^@.*\//, '');
 console.log()
@@ -47,7 +48,10 @@ const libraryFile = (file: string, format: 'esm' | 'commonjs', production: boole
 const libraryEnvironments = (devFile: string, prodFile: string, format: 'esm' | 'commonjs'): RollupWatchOptions => {
   const plugins: InputPluginOption[] = [
     typescript(),
-    resolve({ browser: false })
+    resolve({
+      browser: false,
+      preferBuiltins: true
+    })
   ];
   if (format === 'commonjs') plugins.push(commonjs());
 
